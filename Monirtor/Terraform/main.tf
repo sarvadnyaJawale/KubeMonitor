@@ -1,18 +1,17 @@
 data "aws_iam_policy_document" "assume_role" {
-  source_json = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      }
+  source = "/dev/null"  # Dummy source to create an empty document
+
+  # AssumeRole statement for EKS cluster
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["eks.amazonaws.com"]
     }
-  ]
-}
-EOF
+
+    actions = ["sts:AssumeRole"]
+  }
 }
 
 resource "aws_iam_role" "eks_cluster_role" {
@@ -53,16 +52,14 @@ resource "aws_iam_role" "eks_node_group_role" {
   name = "eks-node-group-cloud"
 
   assume_role_policy = jsonencode({
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "ec2.amazonaws.com"
       }
-    ],
-    Version = "2012-10-17",
+    }],
+    Version = "2012-10-17"
   })
 }
 
