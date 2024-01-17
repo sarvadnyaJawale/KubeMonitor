@@ -1,5 +1,5 @@
 data "aws_iam_policy_document" "assume_role" {
-  source = "/dev/null"  # Dummy source to create an empty document
+
 
   # AssumeRole statement for EKS cluster
   statement {
